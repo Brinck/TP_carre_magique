@@ -1,0 +1,90 @@
+//Programme : TP_carre_magique (output)
+//BUT : 
+- Création et initialisation d'un tableau à deux dimensions dont la taille est définie par des constantes
+- Si l'utilisateur change les constantes, le programme adapte automatiquement la taille du tableau
+- Initialisation de toutes les valeurs du tableau à 0
+- Initialisation de la position de début de pose au nord du milieu du tableau
+- On place les chiffres de façon croissante en démarrant de 1 en allant au nord-est de la position courante une seule fois
+- Si la place est déjà prise, on se déplace au nord-ouest jusqu’à trouver cette place libre
+- Le tableau est considéré comme sphérique, c’est-à-dire que s’il on arrive au-delà de la dernière colonne, on revient à la première colonne et inversement. Même fonctionnement pour les lignes
+- Toutes les lignes, toutes les colonnes, et les deux diagonales ont la même somme
+//ENTREE : aucune entrée
+//SORTIE : on affiche le tableau du carré magique
+
+CONST
+        DebutI=1 //Min de I
+        DebutJ=1 //Min de J
+        FinI=5 //Max de I
+        FinJ=5 //Max de J
+
+TYPE
+        Tab=Tableau[DebutI..FinI,DebutJ..FinJ] DE ENTIER
+
+PROCEDURE InitTabCarre (var TabCarre:Tab; i,j:ENTIER)
+
+        DEBUT
+        //Initialise les valeurs de toutes les cases du tableau a 0
+        POUR i DE DebutI A FinI FAIRE
+                POUR j DE DebutJ A FinJ FAIRE
+                        TabCarre[i,j]<--0
+                FINPOUR
+        FINPOUR
+        FINPROCEDURE
+
+PROCEDURE InitPosDeb (var i,j:ENTIER)
+
+        DEBUT
+        //On se positionne une case au dessus du milieu du tableau pour commencer les deplacements
+        i<--(FinI DIV 2)+1
+        j<--(FinJ DIV 2)
+        FINPROCEDURE
+
+PROCEDURE AvancerDroite (var TabCarre:Tab; var i,j:ENTIER)
+
+        DEBUT
+                        j<--FinJ //Si la valeur de j va en dessous de la limite elle reprend de la fin de la ligne
+                FINSI
+        FINTANTQUE
+	FINPROCEDURE
+
+PROCEDURE AffTabCarre (var TabCarre:Tab; i,j:ENTIER)
+
+        DEBUT
+        //Affiche case par case la valeur de chacune avec des espaces avant et apres le nombre
+        POUR i DE DebutI A FinI FAIRE
+                POUR j DE DebutJ A FinJ FAIRE
+                        ECRIRE(" ",TabCarre[i,j]," ")
+                FINPOUR
+        FINPOUR
+        FINPROCEDURE
+
+VAR
+        TabCarre:Tab //Tableau du carre magique
+
+        position, i, j, compteur, NbCases:ENTIER
+
+DEBUT
+        ECRIRE("Programme : carre magique")
+
+        //Initialisation du tableau
+        InitTabCarre(TabCarre,i,j)
+
+        //Initialisation de la position de debut
+        InitPosDeb(i,j)
+
+        //Deplacements et pose dans le tableau
+        NbCases<--FinI*FinJ //le nombre de cases est egal a la longueur multiplie par la largeur du tableau
+        //Le programme va continuer de se deplacer pour remplir les cases de 1 jusqu'au maximum
+        POUR compteur DE 1 A NbCases FAIRE
+                //Avance en diagonale droite
+                AvancerDroite(TabCarre,i,j)
+
+                //Avance en diagonale gauche
+                AvancerGauche(TabCarre,i,j)
+
+                TabCarre[i,j]<--compteur//Donne la valeur du compteur a la case sur laquelle on se positionne
+        FINPOUR
+
+        //Afficher le tableau
+        AffTabCarre(TabCarre,i,j)
+FIN
